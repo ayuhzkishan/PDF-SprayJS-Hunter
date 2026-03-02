@@ -5,15 +5,15 @@ class HeapSprayAnalyzer:
         # Patterns commonly found in heap-spraying attacks
         self.patterns = {
             "NOP Sled": [
-                r"%u9090", 
-                r"\\x90\\x90", 
-                r"%u0C0C", 
-                r"%u4141" # 'AAAA' sled
+                r"%u9090",
+                r"\\x90",     # matches \x90 as it appears in JS string literals
+                r"%u0C0C",
+                r"%u4141"    # 'AAAA' sled
             ],
             "Massive String Concatenation": [
-                r"while\s*\(.*\.length\s*<\s*\d{5,}\)", # while loop checking length
-                r"\w+\s*\+=\s*\w+", # repetitive concatenation
-                r"\.repeat\(\d{5,}\)" # large repeats
+                r"while\s*\(.*\.length\s*<\s*\d{5,}\)",  # while loop with large length threshold
+                r"for\s*\(.*\w+\s*<\s*\d{5,}",            # for loop with large iteration count
+                r"\.repeat\(\d{5,}\)"                       # very large .repeat() call
             ],
             "Memory Allocation Vectors": [
                 r"new\s+Array\(\d{5,}\)", 
@@ -32,7 +32,7 @@ class HeapSprayAnalyzer:
         results = {
             "findings": [],
             "score": 0,
-            "confidence": "Low"
+            "confidence": "CLEAN"
         }
 
         if not js_code:

@@ -50,8 +50,11 @@ def main():
 
     console.print(table)
 
-    color = "red" if results["confidence"] == "HIGH" else "yellow" if results["confidence"] == "MEDIUM" else "green"
-    console.print(f"\n[bold {color}]Verdict:[/bold {color}] {results['confidence']} CONFIDENCE Heap Spray Detected.")
+    if results["confidence"] == "CLEAN":
+        console.print("\n[bold green]Verdict: CLEAN — No Heap Spray Indicators Found.[/bold green]")
+    else:
+        color = "red" if results["confidence"] == "HIGH" else "yellow" if results["confidence"] == "MEDIUM" else "cyan"
+        console.print(f"\n[bold {color}]Verdict: {results['confidence']} CONFIDENCE — Heap Spray Detected.[/bold {color}]")
 
     # Optional: Dump JS
     if args.dump_js:
